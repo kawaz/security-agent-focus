@@ -18,9 +18,17 @@ This script monitors macOS system logs for SecurityAgent window events and autom
 
 ## Installation
 
+### Using Nix
+
+```bash
+nix run github:kawaz/security-agent-focus -- register
+```
+
+### Manual
+
 ```bash
 # Download the script
-curl -o /usr/local/bin/security-agent-focus https://raw.githubusercontent.com/kawaz/security-agent-focus/main/security-agent-focus
+curl -o /usr/local/bin/security-agent-focus https://raw.githubusercontent.com/kawaz/security-agent-focus/main/security-agent-focus.sh
 chmod +x /usr/local/bin/security-agent-focus
 
 # Register as LaunchDaemon (runs at boot)
