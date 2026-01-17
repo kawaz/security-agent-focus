@@ -18,6 +18,13 @@ This script monitors macOS system logs for SecurityAgent window events and autom
 
 ## Installation
 
+### Using Homebrew
+
+```bash
+brew install kawaz/tap/security-agent-focus
+security-agent-focus register
+```
+
 ### Using Nix
 
 ```bash
