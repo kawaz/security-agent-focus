@@ -6,9 +6,13 @@ LABEL="com.github.kawaz.security-agent-focus"
 PLIST="/Library/LaunchDaemons/${LABEL}.plist"
 SCRIPT="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 
+is_registered() {
+  launchctl print "system/$LABEL" &>/dev/null
+}
+
 case "${1:-}" in
   register)
-    sudo launchctl unload "$PLIST" 2>/dev/null || true
+    is_registered && sudo launchctl unload "$PLIST"
     sudo tee "$PLIST" > /dev/null << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -32,12 +36,13 @@ EOF
     echo "Registered: $LABEL"
     ;;
   unregister)
-    sudo launchctl unload "$PLIST" 2>/dev/null || true
+    is_registered && sudo launchctl unload "$PLIST"
     sudo rm -f "$PLIST"
     echo "Unregistered: $LABEL"
     ;;
   status)
-    if state=$(launchctl print "system/$LABEL" 2>/dev/null | grep -oE 'state = \w+' | cut -d' ' -f3); then
+    if is_registered; then
+      state=$(launchctl print "system/$LABEL" | grep -oE 'state = \w+' | cut -d' ' -f3)
       echo "Registered: $LABEL ($state)"
     else
       echo "Not registered"
