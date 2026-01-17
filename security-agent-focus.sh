@@ -10,8 +10,16 @@ is_registered() {
   launchctl print "system/$LABEL" &>/dev/null
 }
 
+is_running() {
+  launchctl print "system/$LABEL" 2>/dev/null | grep -q 'state = running'
+}
+
 case "${1:-}" in
   register)
+    if is_running; then
+      echo "Already running: $LABEL"
+      exit 0
+    fi
     is_registered && sudo launchctl unload "$PLIST"
     sudo tee "$PLIST" > /dev/null << EOF
 <?xml version="1.0" encoding="UTF-8"?>
